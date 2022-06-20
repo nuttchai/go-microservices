@@ -12,6 +12,16 @@ services:
       mode: replicated
       replicas: 1
 
+  logger-service:
+    build:
+      context: ./../logger-service
+      dockerfile: logger-service.dockerfile
+    restart: always # if the image crashes, restart it
+    # we don't need to export any ports, the service will not be exposed
+    deploy:
+      mode: replicated
+      replicas: 1
+
   authentication-service:
     build:
       context: ./../authentication-service
