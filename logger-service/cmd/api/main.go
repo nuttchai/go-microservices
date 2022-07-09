@@ -17,8 +17,8 @@ import (
 const (
 	webPort  = "80"
 	rpcPort  = "5001"
-	mongoUrl = "mongodb://mongo:27017"
-	gRcpPort = "50001"
+	mongoURL = "mongodb://mongo:27017"
+	gRpcPort = "50001"
 )
 
 var client *mongo.Client
@@ -29,10 +29,11 @@ type Config struct {
 
 func main() {
 	// connect to mongo
-	client, err := connectToMongo()
+	mongoClient, err := connectToMongo()
 	if err != nil {
 		log.Panic(err)
 	}
+	client = mongoClient
 
 	// create a context in order to disconnect
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -53,9 +54,8 @@ func main() {
 	err = rpc.Register(new(RPCServer))
 	go app.rpcListen()
 
-	// start web server in main thread
-	log.Println("Starting web server on port", webPort)
-
+	// start web server
+	log.Println("Starting service on port", webPort)
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", webPort),
 		Handler: app.routes(),
@@ -65,10 +65,11 @@ func main() {
 	if err != nil {
 		log.Panic()
 	}
+
 }
 
 func (app *Config) rpcListen() error {
-	log.Println("Starting RPC server on port: ", rpcPort)
+	log.Println("Starting RPC server on port ", rpcPort)
 	listen, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s", rpcPort))
 	if err != nil {
 		return err
@@ -82,11 +83,12 @@ func (app *Config) rpcListen() error {
 		}
 		go rpc.ServeConn(rpcConn)
 	}
+
 }
 
 func connectToMongo() (*mongo.Client, error) {
 	// create connection options
-	clientOptions := options.Client().ApplyURI(mongoUrl)
+	clientOptions := options.Client().ApplyURI(mongoURL)
 	clientOptions.SetAuth(options.Credential{
 		Username: "admin",
 		Password: "password",
