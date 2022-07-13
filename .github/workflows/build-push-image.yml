@@ -1,0 +1,56 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: action/checkout@v2
+      - name: docker login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login -u DOCKER_USER -p DOCKER_PASSWORD
+
+      - name: Build authentication-service image
+        run: docker build ./authentication-service -f authentication-service.dockerfile -t ${{secrets.DOCKER_USER}}/authentication-service:${{secrets.VERSION}}
+
+      - name: Push authentication-service image to docker hub
+        run: docker push ${{secrets.DOCKER_USER}}/authentication-service:${{secrets.VERSION}}
+
+      - name: Build broker-service image
+        run: docker build ./broker-service -f broker-service.dockerfile -t ${{secrets.DOCKER_USER}}/broker-service:${{secrets.VERSION}}
+
+      - name: Push broker-service image to docker hub
+        run: docker push ${{secrets.DOCKER_USER}}/broker-service:${{secrets.VERSION}}
+
+      - name: Build front-end image
+        run: docker build ./front-end -f front-end.dockerfile -t ${{secrets.DOCKER_USER}}/front-end:${{secrets.VERSION}}
+
+      - name: Push front-end image to docker hub
+        run: docker push ${{secrets.DOCKER_USER}}/front-end:${{secrets.VERSION}}
+
+      - name: Build listener-service image
+        run: docker build ./listener-service -f listener-service.dockerfile -t ${{secrets.DOCKER_USER}}/listener-service:${{secrets.VERSION}}
+
+      - name: Push listener-service image to docker hub
+        run: docker push ${{secrets.DOCKER_USER}}/listener-service:${{secrets.VERSION}}
+
+      - name: Build logger-service image
+        run: docker build ./logger-service -f logger-service.dockerfile -t ${{secrets.DOCKER_USER}}/logger-service:${{secrets.VERSION}}
+
+      - name: Push logger-service image to docker hub
+        run: docker push ${{secrets.DOCKER_USER}}/logger-service:${{secrets.VERSION}}
+
+      - name: Build mail-service image
+        run: docker build ./mail-service -f mail-service.dockerfile -t ${{secrets.DOCKER_USER}}/mail-service:${{secrets.VERSION}}
+
+      - name: Push mail-service image to docker hub
+        run: docker push ${{secrets.DOCKER_USER}}/mail-service:${{secrets.VERSION}}
