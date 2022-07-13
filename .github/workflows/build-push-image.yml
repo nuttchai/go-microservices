@@ -17,6 +17,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: build go binary
+        run: |
+          cd project &&
+          make up_build
+
       - name: docker login
 
         run: |
