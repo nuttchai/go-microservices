@@ -21,6 +21,8 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+    environment:
+      BROKER_URL: "http://backend"
 
   broker-service:
     image: nuttchai/broker-service:1.0.0
