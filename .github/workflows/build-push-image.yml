@@ -77,3 +77,11 @@ jobs:
 
       - name: Push caddy image to docker hub
         run: docker push $DOCKER_USER/micro-caddy:$IMAGE_VERSION
+
+      - name: Build caddy (production) image
+        run: |
+          cd project && 
+          docker build . -f caddy.production.dockerfile -t $DOCKER_USER/micro-caddy-production:$IMAGE_VERSION
+
+      - name: Push caddy (production) image to docker hub
+        run: docker push $DOCKER_USER/micro-caddy-production:$IMAGE_VERSION
