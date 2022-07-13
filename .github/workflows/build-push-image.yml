@@ -69,3 +69,11 @@ jobs:
 
       - name: Push mail-service image to docker hub
         run: docker push $DOCKER_USER/mail-service:$IMAGE_VERSION
+
+      - name: Build caddy image
+        run: |
+          cd project && 
+          docker build . -f caddy.dockerfile -t $DOCKER_USER/micro-caddy:$IMAGE_VERSION
+
+      - name: Push caddy image to docker hub
+        run: docker push $DOCKER_USER/micro-caddy:$IMAGE_VERSION
