@@ -10,47 +10,62 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKER_USER: ${{secrets.DOCKER_USER}}
+      DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      IMAGE_VERSION: ${{secrets.VERSION}}
+
     steps:
       - uses: actions/checkout@v2
       - name: docker login
-        env:
-          DOCKER_USER: ${{secrets.DOCKER_USER}}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
       - name: Build authentication-service image
-        run: docker build ./authentication-service -f authentication-service.dockerfile -t ${{secrets.DOCKER_USER}}/authentication-service:${{secrets.VERSION}}
+        run: |
+          cd authentication-service && 
+          docker build . -f authentication-service.dockerfile -t $DOCKER_USER/authentication-service:$IMAGE_VERSION
 
       - name: Push authentication-service image to docker hub
-        run: docker push ${{secrets.DOCKER_USER}}/authentication-service:${{secrets.VERSION}}
+        run: docker push $DOCKER_USER/authentication-service:$IMAGE_VERSION
 
       - name: Build broker-service image
-        run: docker build ./broker-service -f broker-service.dockerfile -t ${{secrets.DOCKER_USER}}/broker-service:${{secrets.VERSION}}
+        run: |
+          cd ../broker-service && 
+          docker build . -f broker-service.dockerfile -t $DOCKER_USER/broker-service:$IMAGE_VERSION
 
       - name: Push broker-service image to docker hub
-        run: docker push ${{secrets.DOCKER_USER}}/broker-service:${{secrets.VERSION}}
+        run: docker push $DOCKER_USER/broker-service:$IMAGE_VERSION
 
       - name: Build front-end image
-        run: docker build ./front-end -f front-end.dockerfile -t ${{secrets.DOCKER_USER}}/front-end:${{secrets.VERSION}}
+        run: |
+          cd ../front-end && 
+          docker build . -f front-end.dockerfile -t $DOCKER_USER/front-end:$IMAGE_VERSION
 
       - name: Push front-end image to docker hub
-        run: docker push ${{secrets.DOCKER_USER}}/front-end:${{secrets.VERSION}}
+        run: docker push $DOCKER_USER/front-end:$IMAGE_VERSION
 
       - name: Build listener-service image
-        run: docker build ./listener-service -f listener-service.dockerfile -t ${{secrets.DOCKER_USER}}/listener-service:${{secrets.VERSION}}
+        run: |
+          cd ../listener-service && 
+          docker build . -f listener-service.dockerfile -t $DOCKER_USER/listener-service:$IMAGE_VERSION
 
       - name: Push listener-service image to docker hub
-        run: docker push ${{secrets.DOCKER_USER}}/listener-service:${{secrets.VERSION}}
+        run: docker push $DOCKER_USER/listener-service:$IMAGE_VERSION
 
       - name: Build logger-service image
-        run: docker build ./logger-service -f logger-service.dockerfile -t ${{secrets.DOCKER_USER}}/logger-service:${{secrets.VERSION}}
+        run: |
+          cd ../logger-service && 
+          docker build . -f logger-service.dockerfile -t $DOCKER_USER/logger-service:$IMAGE_VERSION
 
       - name: Push logger-service image to docker hub
-        run: docker push ${{secrets.DOCKER_USER}}/logger-service:${{secrets.VERSION}}
+        run: docker push $DOCKER_USER/logger-service:$IMAGE_VERSION
 
       - name: Build mail-service image
-        run: docker build ./mail-service -f mail-service.dockerfile -t ${{secrets.DOCKER_USER}}/mail-service:${{secrets.VERSION}}
+        run: |
+          cd ../mail-service && 
+          docker build . -f mail-service.dockerfile -t $DOCKER_USER/mail-service:$IMAGE_VERSION
 
       - name: Push mail-service image to docker hub
-        run: docker push ${{secrets.DOCKER_USER}}/mail-service:${{secrets.VERSION}}
+        run: docker push $DOCKER_USER/mail-service:$IMAGE_VERSION
