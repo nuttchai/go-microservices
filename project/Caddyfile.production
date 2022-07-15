@@ -21,13 +21,13 @@
 	}
 }
 
-microservice.nuttchai.com:80 {
+gomicro.nuttchai.app:80 {
 	encode zstd gzip
 	import static
 
 	reverse_proxy  http://front-end:8081
 }
 
-broker.nuttchai.com:80 {
+gobroker.nuttchai.app:80 {
 	reverse_proxy http://broker-service:8080
 }
