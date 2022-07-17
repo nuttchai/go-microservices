@@ -26,11 +26,11 @@ spec:
             - containerPort: 27017
           resources:
             limits:
-              memory: 512Mi
-              cpu: "1"
+              memory: 128Mi
+              cpu: "500m"
             requests:
-              memory: 256Mi
-              cpu: "0.2"
+              memory: 64Mi
+              cpu: "250m"
 
 ---
 apiVersion: v1
