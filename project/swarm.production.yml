@@ -5,7 +5,7 @@ version: "3"
 
 services:
   caddy:
-    image: nuttchai/micro-caddy-production:1.0.0
+    image: nuttchai/micro-caddy-production:1.0.1
     deploy:
       mode: replicated
       replicas: 1
@@ -20,12 +20,12 @@ services:
       - caddy_config:/config
 
   front-end:
-    image: nuttchai/front-end:1.0.0
+    image: nuttchai/front-end:1.0.1
     deploy:
       mode: replicated
       replicas: 1
     environment:
-      BROKER_URL: "http://gobroker.nuttchai.app"
+      BROKER_URL: "https://gobroker.nuttchai.app"
 
   broker-service:
     image: nuttchai/broker-service:1.0.0
@@ -48,7 +48,7 @@ services:
       DSN: "host=postgres port=5432 user=postgres password=password dbname=users sslmode=disable timezone=UTC connect_timeout=5"
 
   logger-service:
-    image: nuttchai/logger-service:1.0.0
+    image: nuttchai/logger-service:1.0.1
     deploy:
       mode: replicated
       replicas: 1
