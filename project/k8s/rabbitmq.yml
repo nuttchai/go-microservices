@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: rabbitmq
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: rabbitmq
@@ -15,9 +16,12 @@ spec:
         - name: rabbitmq
           image: "rabbitmq:3.9-alpine"
           resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
             limits:
-              memory: "256Mi"
-              cpu: "1"
+              memory: "512Mi"
+              cpu: "500m"
           ports:
             - containerPort: 5672
 
@@ -30,5 +34,7 @@ spec:
   selector:
     app: rabbitmq
   ports:
-    - port: 5672
+    - protocol: TCP
+      name: main-port
+      port: 5672
       targetPort: 5672
