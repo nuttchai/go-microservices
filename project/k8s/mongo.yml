@@ -39,7 +39,7 @@ metadata:
   name: mongo
 spec:
   selector:
-    name: mongo # must be the same with deployment name
+    app: mongo # must be the same with deployment name
   ports:
     - protocol: TCP
       name: main-port
