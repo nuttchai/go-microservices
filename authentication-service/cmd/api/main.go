@@ -19,8 +19,7 @@ const webPort = "80"
 var count int64
 
 type Config struct {
-	Db     *sql.DB
-	Models data.Models
+	Repo data.Repository
 }
 
 func main() {
@@ -33,10 +32,7 @@ func main() {
 	}
 
 	// setup config
-	app := Config{
-		Db:     conn,
-		Models: data.New(conn),
-	}
+	app := Config{}
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", webPort),
@@ -85,4 +81,9 @@ func connectToDB() *sql.DB {
 
 		continue
 	}
+}
+
+func (app *Config) setupRepo(conn *sql.DB) {
+	db := data.NewPostgresRepository(conn)
+	app.Repo = db
 }
