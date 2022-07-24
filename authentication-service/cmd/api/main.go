@@ -19,7 +19,8 @@ const webPort = "80"
 var count int64
 
 type Config struct {
-	Repo data.Repository
+	Repo   data.Repository
+	Client *http.Client
 }
 
 func main() {
@@ -32,7 +33,9 @@ func main() {
 	}
 
 	// setup config
-	app := Config{}
+	app := Config{
+		Client: &http.Client{},
+	}
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", webPort),
